@@ -150,6 +150,14 @@ export default function Contact() {
               >
                 Resume <ArrowUpRight size={16} />
               </SweepButton>
+              <SweepButton
+                variant="line"
+                href="https://www.naukri.com/code360/profile/Aetherion"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Code360 <ArrowUpRight size={16} />
+              </SweepButton>
             </Reveal>
 
             <div className="mt-12 grid gap-6 border-t border-line pt-10 sm:grid-cols-2">

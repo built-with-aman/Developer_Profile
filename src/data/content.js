@@ -340,6 +340,13 @@ export const SOCIALS = [
   { id: "linkedin", label: "LinkedIn", handle: "aman-updates", href: LINKEDIN, note: "profile & roles" },
   { id: "github", label: "GitHub", handle: "built-with-aman", href: "https://github.com/built-with-aman", note: "source & commits" },
   { id: "leetcode", label: "LeetCode", handle: "AmanSoniCodes", href: "https://leetcode.com/u/AmanSoniCodes/", note: "DSA practice trail" },
+  {
+    id: "code360",
+    label: "Code360",
+    handle: "Aetherion",
+    href: "https://www.naukri.com/code360/profile/Aetherion",
+    note: "Code360 profile",
+  },
   { id: "codepen", label: "CodePen", handle: "built-with-aman", href: "https://codepen.io/built-with-aman", note: "UI experiments" },
   { id: "medium", label: "Medium", handle: "EdgeWithAman", href: "https://medium.com/@EdgeWithAman", note: "writing & notes" },
   { id: "hackerrank", label: "HackerRank", handle: "HackerRank_aman", href: "https://www.hackerrank.com/profile/HackerRank_aman", note: "SQL + challenges" },
