@@ -144,106 +144,57 @@ function AboutSite() {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   INTENT CARD — cursor-tracked spotlight + hover border
-   ───────────────────────────────────────────────────────────── */
-function IntentCard({ index, label, icon: Icon, children, delay = 0 }) {
-  const ref = useRef(null);
-  const [pos, setPos] = useState({ x: 50, y: 50 });
-  const [hover, setHover] = useState(false);
-
-  const onMove = (e) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    setPos({
-      x: ((e.clientX - rect.left) / rect.width) * 100,
-      y: ((e.clientY - rect.top) / rect.height) * 100,
-    });
-  };
-
-  return (
-    <Reveal delay={delay}>
-      <article
-        ref={ref}
-        onMouseMove={onMove}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        className="group relative h-full overflow-hidden border border-line bg-bg p-6 transition-colors duration-500 hover:border-fg/40 md:p-8"
-      >
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 transition-opacity duration-500"
-          style={{
-            opacity: hover ? 1 : 0,
-            background:
-              "radial-gradient(360px circle at var(--mx) var(--my), rgba(255,255,255,0.08), transparent 60%)",
-            ["--mx"]: `${pos.x}%`,
-            ["--my"]: `${pos.y}%`,
-          }}
-        />
-
-        <span
-          aria-hidden
-          className="pointer-events-none absolute -right-2 bottom-2 select-none font-display text-[5.5rem] font-bold leading-none tracking-tighter opacity-[0.05] transition-opacity duration-500 group-hover:opacity-[0.09]"
-        >
-          {index}
-        </span>
-
-        <div className="relative z-[1] flex h-full flex-col">
-          <div className="flex items-center gap-2 text-muted">
-            {Icon && <Icon size={14} />}
-            <p className="font-mono text-[10px] uppercase tracking-[0.3em]">
-              {index} · {label}
-            </p>
-          </div>
-          <div className="mt-6">{children}</div>
-        </div>
-      </article>
-    </Reveal>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────
-   INTENT ARTICLE — "The brief"
+   INTENT ARTICLE — "The brief" (REFURBISHED)
    ───────────────────────────────────────────────────────────── */
 function IntentArticle() {
   const ref = useRef(null);
-  const inView = useInView(ref, { amount: 0.2, once: true });
+  const inView = useInView(ref, { amount: 0.15, once: true });
   const reduced = usePrefersReducedMotion();
 
   const PRINCIPLES = [
+    { n: "01", t: "Reads the diff", d: "Before the PR. Before the review. Every time." },
+    { n: "02", t: "Asks early", d: "A two-minute question beats a two-day guess." },
+    { n: "03", t: "Ships working", d: "Then refines. Perfect is the enemy of merged." },
+    { n: "04", t: "AI as a power tool", d: "Used hard. Reviewed line by line. Owned end to end." },
+  ];
+
+  const SPECS = [
     {
       n: "01",
-      t: "Reads the diff",
-      d: "Before the PR. Before the review. Every time.",
+      label: "Mobility",
+      icon: MapPin,
+      title: "Open to relocate.",
+      desc: "Good teams beat familiar cities. I'll pack light, be useful on day one, and know the local coffee by week two.",
+      meta: "Bengaluru · Hyderabad · Pune · Remote-first",
     },
     {
       n: "02",
-      t: "Asks early",
-      d: "A two-minute question beats a two-day guess.",
+      label: "Compensation",
+      icon: IndianRupee,
+      title: "6 LPA in hand.",
+      desc: "The floor, not the ceiling. Without a full-time SDE title on the résumé, that's the honest number for a first seat. Everything after it is earned on the job.",
+      meta: "Minimum expectation · in-hand",
+      isOdometer: true,
     },
     {
       n: "03",
-      t: "Ships working",
-      d: "Then refines. Perfect is the enemy of merged.",
-    },
-    {
-      n: "04",
-      t: "AI as a power tool",
-      d: "Used hard. Reviewed line by line. Owned end to end.",
+      label: "Five-year mindset",
+      icon: Compass,
+      title: "Learn. Connect. Go deep.",
+      desc: "Five years out: skills I can't predict today, a network built across teams I haven't met yet, and a career deep in this stream.",
+      meta: "Senior engineer · product developer",
     },
   ];
 
   return (
-    <section
-      ref={ref}
-      className="relative z-[1] border-b border-line bg-bg py-20 md:py-28"
-    >
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+    <section ref={ref} className="relative z-[1] bg-bg py-24 md:py-32 border-b border-line">
+      <div className="mx-auto max-w-7xl px-5 md:px-8">
+        
+        {/* ── HEADER ────────────────────────────────────────── */}
         <motion.div
           initial={reduced ? false : { scaleX: 0 }}
           animate={inView ? { scaleX: 1 } : {}}
-          transition={{ duration: 1.1, ease: EASE }}
+          transition={{ duration: 1.2, ease: EASE }}
           style={{ transformOrigin: "left" }}
           className="h-px w-full bg-line"
         />
@@ -262,154 +213,164 @@ function IntentArticle() {
         </div>
 
         <Reveal delay={0.1}>
-          <h2 className="mt-6 max-w-3xl font-display text-4xl font-bold leading-[1.05] tracking-tight md:text-6xl">
+          <h2 className="mt-8 max-w-4xl font-display text-5xl font-bold leading-[0.95] tracking-tight md:text-7xl">
             What I want.{" "}
             <span className="text-muted">Stated once, in plain English.</span>
           </h2>
         </Reveal>
 
-        <Reveal delay={0.16}>
-          <div className="mt-10 grid gap-8 md:grid-cols-12 md:gap-12">
-            <div className="md:col-span-7">
-              <p className="text-base leading-relaxed text-muted md:text-lg">
-                <span className="float-left mr-3 mt-1 font-display text-5xl font-bold leading-none text-fg md:text-6xl">
-                  I
-                </span>
+        {/* ── NARRATIVE & QUOTE GRID ────────────────────────── */}
+        <div className="mt-16 grid gap-12 lg:grid-cols-12 lg:gap-20">
+          
+          {/* Left Column: The Narrative */}
+          <Reveal delay={0.16} className="lg:col-span-7">
+            <div className="space-y-8">
+              <p className="text-lg leading-relaxed text-fg/90 md:text-xl first-letter:float-left first-letter:mr-4 first-letter:mt-1 first-letter:font-display first-letter:text-7xl first-letter:font-bold first-letter:leading-[0.75] first-letter:text-fg">
                 don't have a full-time SDE title yet. What I do have: three hundred
                 problems logged in a failure journal, projects that run in production,
                 and a habit of shipping code that works rather than code that merely
-                looks like it might. The first seat is the one I'm here for — the one
-                where learning in public is the job description, not a perk.
+                looks like it might.
               </p>
-
-              <p className="mt-6 text-base leading-relaxed text-muted md:text-lg">
-                No preamble, then. I'll move for the right team. I know what a first seat
-                is worth. I know what I want the next five years to build.
+              <p className="text-lg leading-relaxed text-muted md:text-xl">
+                The first seat is the one I'm here for — the one where learning in public
+                is the job description, not a perk. No preamble, then. I'll move for the
+                right team. I know what a first seat is worth. I know what I want the
+                next five years to build.
               </p>
             </div>
+          </Reveal>
 
-            <div className="md:col-span-5 md:pt-2">
-              <div className="group relative border-l-2 border-line pl-6">
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute -left-1 -top-6 select-none font-display text-[6rem] leading-none text-fg/10 transition-transform duration-700 group-hover:scale-110"
-                >
-                  &ldquo;
-                </span>
-                <p className="relative font-display text-xl font-semibold leading-snug tracking-tight md:text-2xl">
-                  Give me a hard problem, teammates who tell the truth, and a codebase
-                  that doesn't flinch. I'll do the same.
-                </p>
-                <p className="mt-4 text-sm leading-relaxed text-muted">
-                  On AI, plainly: I use it hard, read every line, and own what ships.
-                </p>
-                <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
-                  — A.&nbsp;SONI
-                </p>
-              </div>
+          {/* Right Column: The Quote */}
+          <Reveal delay={0.22} className="lg:col-span-5 flex items-center">
+            <div className="relative w-full border-l-2 border-fg/20 pl-8 md:pl-10">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -left-2 -top-10 select-none font-display text-[8rem] leading-none text-fg/5 transition-transform duration-700 hover:scale-105"
+              >
+                &ldquo;
+              </span>
+              <p className="relative font-display text-2xl font-semibold leading-snug tracking-tight md:text-3xl">
+                Give me a hard problem, teammates who tell the truth, and a codebase
+                that doesn't flinch. I'll do the same.
+              </p>
+              <p className="mt-6 text-sm leading-relaxed text-muted">
+                On AI, plainly: I use it hard, read every line, and own what ships.
+              </p>
+              <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
+                — A.&nbsp;SONI
+              </p>
             </div>
-          </div>
-        </Reveal>
-
-        <div className="mt-16 grid gap-6 md:grid-cols-3">
-          <IntentCard index="01" label="Mobility" icon={MapPin} delay={0.05}>
-            <p className="font-display text-2xl font-bold leading-tight tracking-tight md:text-3xl">
-              Open to relocate.
-            </p>
-            <p className="mt-4 text-sm leading-relaxed text-muted md:text-base">
-              Good teams beat familiar cities. I'll pack light, be useful on day one,
-              and know the local coffee by week two.
-            </p>
-            <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.3em] text-muted/70">
-              Bengaluru · Hyderabad · Pune · Remote-first
-            </p>
-          </IntentCard>
-
-          <IntentCard index="02" label="Compensation" icon={IndianRupee} delay={0.12}>
-            <div className="flex items-baseline gap-2">
-              <Odometer
-                value={6}
-                suffix=" LPA"
-                className="font-display text-4xl font-bold tracking-tight md:text-5xl"
-              />
-            </div>
-            <p className="mt-4 text-sm leading-relaxed text-muted md:text-base">
-              In hand — the floor, not the ceiling. Without a full-time SDE title on the
-              résumé, that's the honest number for a first seat. Everything after it is
-              earned on the job.
-            </p>
-            <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.3em] text-muted/70">
-              Minimum expectation · in-hand
-            </p>
-          </IntentCard>
-
-          <IntentCard index="03" label="Five-year mindset" icon={Compass} delay={0.19}>
-            <p className="font-display text-2xl font-bold leading-tight tracking-tight md:text-3xl">
-              Learn. Connect. Go deep.
-            </p>
-            <p className="mt-4 text-sm leading-relaxed text-muted md:text-base">
-              Five years out: skills I can't predict today, a network built across teams
-              I haven't met yet, and a career deep in this stream — senior engineer, or
-              product developer who owns what ships.
-            </p>
-            <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.3em] text-muted/70">
-              Senior engineer · product developer
-            </p>
-          </IntentCard>
+          </Reveal>
         </div>
 
-        <Reveal delay={0.22}>
-          <div className="mt-16 border-t border-line pt-10 md:mt-20">
-            <div className="flex flex-wrap items-baseline justify-between gap-4">
+        {/* ── SPEC SHEET (Mobility, Comp, Mindset) ──────────── */}
+        <div className="mt-24 border-t border-line pt-16 md:mt-32">
+          <Reveal delay={0.1}>
+            <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-muted mb-12">
+              The terms
+            </p>
+          </Reveal>
+          
+          <div className="grid gap-12 md:grid-cols-3 md:gap-8">
+            {SPECS.map((spec, i) => {
+              const Icon = spec.icon;
+              return (
+                <Reveal key={spec.n} delay={0.1 + i * 0.08}>
+                  <div className="flex flex-col h-full border-t border-line pt-6 group">
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
+                        {spec.n} · {spec.label}
+                      </span>
+                      <Icon size={14} className="text-muted group-hover:text-fg transition-colors" />
+                    </div>
+                    
+                    {spec.isOdometer ? (
+                      <Odometer
+                        value={6}
+                        suffix=" LPA"
+                        className="font-display text-3xl font-bold tracking-tight md:text-4xl"
+                      />
+                    ) : (
+                      <h3 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
+                        {spec.title}
+                      </h3>
+                    )}
+                    
+                    <p className="mt-4 text-sm leading-relaxed text-muted flex-grow">
+                      {spec.desc}
+                    </p>
+                    
+                    <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.3em] text-muted/60">
+                      {spec.meta}
+                    </p>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── HOW I WORK (Principles) ───────────────────────── */}
+        <div className="mt-24 border-t border-line pt-16 md:mt-32">
+          <div className="flex flex-wrap items-baseline justify-between gap-4 mb-12">
+            <Reveal>
               <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-muted">
                 How I work
               </p>
+            </Reveal>
+            <Reveal delay={0.06}>
               <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted/60">
                 Four rules, no exceptions
               </p>
-            </div>
-
-            <div className="mt-8 grid gap-px overflow-hidden border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-              {PRINCIPLES.map((p) => (
-                <div
-                  key={p.n}
-                  className="group bg-bg p-6 transition-colors duration-500 hover:bg-surface md:p-7"
-                >
-                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted/70">
-                    {p.n}
-                  </p>
-                  <p className="mt-4 font-display text-lg font-bold tracking-tight md:text-xl">
-                    {p.t}
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">{p.d}</p>
-                </div>
-              ))}
-            </div>
+            </Reveal>
           </div>
-        </Reveal>
 
-        <Reveal delay={0.26} className="mt-16 border-t border-line pt-10 md:mt-20">
-          <ScrollLitText
-            className="max-w-4xl font-display text-2xl font-semibold leading-snug tracking-tight md:text-4xl"
-            spread={3}
-          >
-            Titles will follow the work. The work is already happening.
-          </ScrollLitText>
-        </Reveal>
+          <div className="grid gap-px overflow-hidden border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+            {PRINCIPLES.map((p) => (
+              <div
+                key={p.n}
+                className="group bg-bg p-8 transition-colors duration-500 hover:bg-surface"
+              >
+                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted/70">
+                  {p.n}
+                </p>
+                <p className="mt-5 font-display text-xl font-bold tracking-tight">
+                  {p.t}
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  {p.d}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
 
-        <Reveal delay={0.3} className="mt-10 flex flex-wrap gap-3">
-          <SweepButton to="/contact" variant="solid">
-            Talk to me <ArrowRight size={16} />
-          </SweepButton>
-          <SweepButton
-            href="/resume.pdf"
-            variant="line"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Download resume <ArrowUpRight size={15} />
-          </SweepButton>
-        </Reveal>
+        {/* ── CLOSING ───────────────────────────────────────── */}
+        <div className="mt-24 border-t border-line pt-16 md:mt-32">
+          <Reveal delay={0.1}>
+            <ScrollLitText
+              className="max-w-4xl font-display text-3xl font-semibold leading-snug tracking-tight md:text-5xl"
+              spread={3}
+            >
+              Titles will follow the work. The work is already happening.
+            </ScrollLitText>
+          </Reveal>
+
+          <Reveal delay={0.18} className="mt-12 flex flex-wrap gap-4">
+            <SweepButton to="/contact" variant="solid">
+              Talk to me <ArrowRight size={16} />
+            </SweepButton>
+            <SweepButton
+              href="/resume.pdf"
+              variant="line"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download resume <ArrowUpRight size={15} />
+            </SweepButton>
+          </Reveal>
+        </div>
+        
       </div>
     </section>
   );
@@ -527,7 +488,6 @@ function ProjectModal({ project, onClose }) {
 
         <div style={{ marginTop: "2rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
           
-          {/* YAHAN FIX KIYA GAYA HAI: <a> ko <Link> se replace kiya gaya hai */}
           <Link
             to={`/work/${project.id}`}
             onClick={onClose}
@@ -540,7 +500,7 @@ function ProjectModal({ project, onClose }) {
               textTransform: "uppercase", 
               textDecoration: "none", 
               fontWeight: 600,
-              display: "inline-block" // Padding ke liye zaroori hai
+              display: "inline-block"
             }}
           >
             Full case study →
