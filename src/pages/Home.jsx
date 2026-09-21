@@ -526,13 +526,26 @@ function ProjectModal({ project, onClose }) {
         )}
 
         <div style={{ marginTop: "2rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-          <a
-            href={`/work/${project.id}`}
+          
+          {/* YAHAN FIX KIYA GAYA HAI: <a> ko <Link> se replace kiya gaya hai */}
+          <Link
+            to={`/work/${project.id}`}
             onClick={onClose}
-            style={{ background: "#e8edf7", color: "#0b0f19", padding: "0.6rem 1rem", fontSize: "11px", letterSpacing: "0.2em", textTransform: "uppercase", textDecoration: "none", fontWeight: 600 }}
+            style={{ 
+              background: "#e8edf7", 
+              color: "#0b0f19", 
+              padding: "0.6rem 1rem", 
+              fontSize: "11px", 
+              letterSpacing: "0.2em", 
+              textTransform: "uppercase", 
+              textDecoration: "none", 
+              fontWeight: 600,
+              display: "inline-block" // Padding ke liye zaroori hai
+            }}
           >
             Full case study →
-          </a>
+          </Link>
+
           {project.githubUrl && (
             <a
               href={project.githubUrl}
