@@ -1,0 +1,459 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+[data-theme="dark"] {
+  --bg: #050505;
+  --surface: #0e0e0e;
+  --surface2: #171717;
+  --fg: #fafafa;
+  --muted: #737373;
+  --line: #262626;
+  --accent: #fafafa;
+  --on-accent: #050505;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-theme="light"] {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --surface2: #f0f0f0;
+  --fg: #0a0a0a;
+  --muted: #737373;
+  --line: #e5e5e5;
+  --accent: #0a0a0a;
+  --on-accent: #fafafa;
+}
+
+@layer base {
+  * { border-color: var(--line); }
+
+  html {
+    scroll-behavior: smooth;
+    /* Stops the sticky nav from clipping anchored sections. */
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  ::selection {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  /* One visible, consistent focus ring. Recruiters tab through things. */
+  :focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 3px;
+  }
+
+  /* Numbers in tables and counters must never jitter. */
+  .tabular,
+  dd,
+  time {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   PROXIMITY — cursor distance, not hover state.
+   useProximity writes --prox (0 → 1) on the row; everything below is
+   a pure function of that number.
+   ══════════════════════════════════════════════════════════════════ */
+
+.prox {
+  --prox: 0;
+}
+
+/* Variable weight. This is the whole accent system of a monochrome site. */
+.prox-title {
+  font-weight: calc(500 + var(--prox) * 300);
+  font-variation-settings: "wght" calc(500 + var(--prox) * 300);
+  letter-spacing: calc(-0.025em + var(--prox) * 0.03em);
+  transform: translate3d(calc(var(--prox) * 10px), 0, 0);
+  will-change: transform, font-variation-settings;
+}
+
+.prox-meta {
+  opacity: calc(0.45 + var(--prox) * 0.55);
+  letter-spacing: calc(0.2em + var(--prox) * 0.12em);
+}
+
+.prox-body {
+  opacity: calc(0.5 + var(--prox) * 0.5);
+}
+
+/* Index number slides out of the margin as you approach. */
+.prox-index {
+  transform: translate3d(calc(var(--prox) * -8px), 0, 0);
+  opacity: calc(0.35 + var(--prox) * 0.65);
+}
+
+/* A rule that grows from a tick mark to a full edge. */
+.prox-rule {
+  transform: scaleX(calc(0.04 + var(--prox) * 0.96));
+  transform-origin: left center;
+  background: var(--fg);
+  height: 1px;
+}
+
+.prox-arrow {
+  transform: translate3d(calc(var(--prox) * 8px), calc(var(--prox) * -8px), 0);
+  opacity: calc(0.3 + var(--prox) * 0.7);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   KINETIC HEADLINE — per-character weight swell around the cursor
+   ══════════════════════════════════════════════════════════════════ */
+
+.kinetic {
+  font-family: "Syne", system-ui, sans-serif;
+}
+
+.kinetic-char {
+  --k: 0;
+  display: inline-block;
+  font-weight: calc(var(--kmin) + (var(--kmax) - var(--kmin)) * var(--k));
+  font-variation-settings: "wght" calc(var(--kmin) + (var(--kmax) - var(--kmin)) * var(--k));
+  transform: translate3d(0, calc(var(--k) * var(--klift) * -1), 0);
+  will-change: font-variation-settings, transform;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SCROLL-LIT TEXT — a reading head travelling through the paragraph
+   ══════════════════════════════════════════════════════════════════ */
+
+.lit {
+  --lit: 0;
+  color: var(--fg);
+}
+
+.lit-word {
+  display: inline-block;
+  /* How far the reading head has passed this particular word. */
+  --w: clamp(0, calc((var(--lit) * (var(--n) + var(--spread)) - var(--i)) / var(--spread)), 1);
+  opacity: calc(0.22 + var(--w) * 0.78);
+  font-weight: calc(400 + var(--w) * 120);
+  filter: blur(calc((1 - var(--w)) * 0.5px));
+  transition: opacity 0.12s linear;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   BLUEPRINT FRAME — perimeter draw, ticks, live dimensions, rails
+   ══════════════════════════════════════════════════════════════════ */
+
+.bp {
+  --tick: 10px;
+}
+
+.bp-stroke {
+  position: absolute;
+  inset: 1px;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  overflow: visible;
+  color: var(--fg);
+  z-index: 2;
+}
+
+.bp-stroke rect {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.75s var(--ease);
+}
+
+.bp[data-engaged="true"] .bp-stroke rect {
+  stroke-dashoffset: 0;
+}
+
+/* Registration ticks */
+.bp-tick {
+  position: absolute;
+  width: var(--tick);
+  height: var(--tick);
+  border: 1px solid var(--fg);
+  opacity: 0;
+  transition: opacity 0.35s var(--ease), transform 0.45s var(--ease);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.bp-tick--tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; transform: translate(4px, 4px); }
+.bp-tick--tr { top: -1px; right: -1px; border-left: 0; border-bottom: 0; transform: translate(-4px, 4px); }
+.bp-tick--bl { bottom: -1px; left: -1px; border-right: 0; border-top: 0; transform: translate(4px, -4px); }
+.bp-tick--br { bottom: -1px; right: -1px; border-left: 0; border-top: 0; transform: translate(-4px, -4px); }
+
+.bp[data-engaged="true"] .bp-tick {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* Cursor rails */
+.bp-rail {
+  position: absolute;
+  background: var(--fg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease);
+  z-index: 1;
+}
+
+.bp-rail--h { left: 0; top: 0; height: 1px; width: 100%; }
+.bp-rail--v { top: 0; left: 0; width: 1px; height: 100%; }
+
+.bp[data-engaged="true"] .bp-rail { opacity: 0.16; }
+
+/* Printed annotations */
+.bp-dim {
+  position: absolute;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.35s var(--ease), transform 0.45s var(--ease);
+  z-index: 3;
+}
+
+.bp-dim--size { bottom: 6px; right: 10px; transform: translateY(4px); }
+.bp-dim--label { top: 6px; left: 10px; transform: translateY(-4px); }
+.bp-dim--cursor { top: 6px; right: 10px; transform: translateY(-4px); }
+
+.bp[data-engaged="true"] .bp-dim {
+  opacity: 0.55;
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ODOMETER — mechanical digit strips
+   ══════════════════════════════════════════════════════════════════ */
+
+.odo {
+  display: inline-flex;
+  align-items: baseline;
+  font-variant-numeric: tabular-nums;
+}
+
+.odo-col {
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+  line-height: 1;
+  vertical-align: baseline;
+}
+
+.odo-strip {
+  display: block;
+  transition: transform var(--odo-dur) var(--ease);
+  will-change: transform;
+}
+
+.odo-digit {
+  display: block;
+  height: 1em;
+  line-height: 1;
+}
+
+.odo-suffix {
+  display: inline-block;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SWEEP BUTTON — fill grows from the cursor's entry point
+   ══════════════════════════════════════════════════════════════════ */
+
+.sweep {
+  isolation: isolate;
+}
+
+.sweep-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--fg);
+  clip-path: circle(0% at var(--ox) var(--oy));
+  transition: clip-path 0.55s var(--ease);
+  z-index: 0;
+}
+
+.sweep[data-on="true"] .sweep-fill {
+  clip-path: circle(142% at var(--ox) var(--oy));
+}
+
+/* Solid variant inverts the other way: the fill is the page colour. */
+.sweep.bg-fg .sweep-fill {
+  background: var(--bg);
+}
+
+.sweep-label--inverted {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  color: var(--bg);
+  clip-path: circle(0% at var(--ox) var(--oy));
+  transition: clip-path 0.55s var(--ease);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.sweep.bg-fg .sweep-label--inverted {
+  color: var(--fg);
+}
+
+.sweep[data-on="true"] .sweep-label--inverted {
+  clip-path: circle(142% at var(--ox) var(--oy));
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   MARQUEE BAND — plain scrolling ticker, no invert window
+   ══════════════════════════════════════════════════════════════════ */
+
+@keyframes band-run {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.band-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 2.5rem;
+  padding: 0.75rem 0;
+  animation: band-run var(--band-speed, 34s) linear infinite;
+}
+
+.band:hover .band-track {
+  animation-play-state: paused;
+}
+
+.band-track--static {
+  animation: none;
+}
+
+.band-item {
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   HALFTONE — printed dot screen revealed around the cursor
+   ══════════════════════════════════════════════════════════════════ */
+
+.halftone {
+  --mx: 50%;
+  --my: 30%;
+  background-image: radial-gradient(var(--fg) 0.9px, transparent 1px);
+  background-size: var(--dot) var(--dot);
+  opacity: var(--ink);
+  -webkit-mask-image: radial-gradient(
+    var(--reveal) circle at var(--mx) var(--my),
+    #000 0%,
+    rgba(0, 0, 0, 0.35) 45%,
+    transparent 72%
+  );
+  mask-image: radial-gradient(
+    var(--reveal) circle at var(--mx) var(--my),
+    #000 0%,
+    rgba(0, 0, 0, 0.35) 45%,
+    transparent 72%
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   MOBILE NAV SHEET — items arrive in sequence, not all at once
+   ══════════════════════════════════════════════════════════════════ */
+
+@keyframes sheet-in {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+.nav-sheet-item {
+  opacity: 0;
+  animation: sheet-in 0.45s var(--ease) forwards;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   UTILITIES
+   ══════════════════════════════════════════════════════════════════ */
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.strip-track {
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+}
+
+/* Legacy ticker kept for anything still using it. */
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker 28s linear infinite;
+}
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   REDUCED MOTION — the design still has to work, just without travel
+   ══════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .band-track,
+  .ticker-track {
+    animation: none;
+  }
+
+  .strip-track { scroll-behavior: auto; }
+
+  .nav-sheet-item {
+    animation: none;
+    opacity: 1;
+  }
+
+  .prox-title,
+  .prox-index,
+  .prox-arrow,
+  .kinetic-char {
+    transform: none;
+  }
+
+  .lit-word {
+    opacity: 1;
+    filter: none;
+  }
+
+  .odo-strip,
+  .bp-stroke rect,
+  .sweep-fill,
+  .sweep-label--inverted {
+    transition-duration: 0.01ms;
+  }
+}
