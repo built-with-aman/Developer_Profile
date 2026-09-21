@@ -144,7 +144,7 @@ function AboutSite() {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   INTENT ARTICLE — "The brief" (REFURBISHED)
+   INTENT ARTICLE — "The brief" (REFURBISHED LAYOUT / UPDATED TEXT)
    ───────────────────────────────────────────────────────────── */
 function IntentArticle() {
   const ref = useRef(null);
@@ -163,26 +163,25 @@ function IntentArticle() {
       n: "01",
       label: "Mobility",
       icon: MapPin,
-      title: "Open to relocate.",
-      desc: "Good teams beat familiar cities. I'll pack light, be useful on day one, and know the local coffee by week two.",
-      meta: "Bengaluru · Hyderabad · Pune · Remote-first",
+      title: "Open to relocate or work remote.",
+      desc: "I'm open to relocating for the right team, and fully set up for remote work. I'll be ready to contribute from day one, wherever that is.",
+      meta: "Bengaluru · Hyderabad · Pune · Remote",
     },
     {
       n: "02",
       label: "Compensation",
       icon: IndianRupee,
-      title: "6 LPA in hand.",
-      desc: "The floor, not the ceiling. Without a full-time SDE title on the résumé, that's the honest number for a first seat. Everything after it is earned on the job.",
-      meta: "Minimum expectation · in-hand",
-      isOdometer: true,
+      title: "Market standard.",
+      desc: "I'm open to whatever compensation is accurate for the job and my experience level. I value the opportunity to learn and grow more than a specific starting number.",
+      meta: "Competitive & flexible · In-hand",
     },
     {
       n: "03",
       label: "Five-year mindset",
       icon: Compass,
-      title: "Learn. Connect. Go deep.",
-      desc: "Five years out: skills I can't predict today, a network built across teams I haven't met yet, and a career deep in this stream.",
-      meta: "Senior engineer · product developer",
+      title: "Grow into a strong engineer.",
+      desc: "In five years, I want to be a dependable senior engineer who understands systems deeply, writes maintainable code, and helps the team ship.",
+      meta: "Senior engineer · Product developer",
     },
   ];
 
@@ -207,15 +206,14 @@ function IntentArticle() {
           </Reveal>
           <Reveal delay={0.06}>
             <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted/70">
-              Intent, in plain terms
+              What I bring to the table.
             </p>
           </Reveal>
         </div>
 
         <Reveal delay={0.1}>
           <h2 className="mt-8 max-w-4xl font-display text-5xl font-bold leading-[0.95] tracking-tight md:text-7xl">
-            What I want.{" "}
-            <span className="text-muted">Stated once, in plain English.</span>
+            What I want.
           </h2>
         </Reveal>
 
@@ -226,16 +224,16 @@ function IntentArticle() {
           <Reveal delay={0.16} className="lg:col-span-7">
             <div className="space-y-8">
               <p className="text-lg leading-relaxed text-fg/90 md:text-xl first-letter:float-left first-letter:mr-4 first-letter:mt-1 first-letter:font-display first-letter:text-7xl first-letter:font-bold first-letter:leading-[0.75] first-letter:text-fg">
-                don't have a full-time SDE title yet. What I do have: three hundred
-                problems logged in a failure journal, projects that run in production,
-                and a habit of shipping code that works rather than code that merely
-                looks like it might.
+                I don't have a full-time SDE title yet, but I have shipped
+                production-ready code. I keep a failure journal to track my mistakes,
+                and I focus on building things that actually work rather than just
+                looking good. I use AI to move fast, but I read every line and take
+                full ownership of what goes into production.
               </p>
               <p className="text-lg leading-relaxed text-muted md:text-xl">
-                The first seat is the one I'm here for — the one where learning in public
-                is the job description, not a perk. No preamble, then. I'll move for the
-                right team. I know what a first seat is worth. I know what I want the
-                next five years to build.
+                I'm looking for my first seat on a team where I can take ownership,
+                learn from code reviews, and contribute to real projects. I'm ready to
+                move for the right team and I know what a first role is worth.
               </p>
             </div>
           </Reveal>
@@ -250,11 +248,8 @@ function IntentArticle() {
                 &ldquo;
               </span>
               <p className="relative font-display text-2xl font-semibold leading-snug tracking-tight md:text-3xl">
-                Give me a hard problem, teammates who tell the truth, and a codebase
-                that doesn't flinch. I'll do the same.
-              </p>
-              <p className="mt-6 text-sm leading-relaxed text-muted">
-                On AI, plainly: I use it hard, read every line, and own what ships.
+                I want to work on challenging problems with a team that values honest
+                feedback and clean code. I'm ready to put in the work.
               </p>
               <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.3em] text-muted">
                 — A.&nbsp;SONI
@@ -284,17 +279,9 @@ function IntentArticle() {
                       <Icon size={14} className="text-muted group-hover:text-fg transition-colors" />
                     </div>
                     
-                    {spec.isOdometer ? (
-                      <Odometer
-                        value={6}
-                        suffix=" LPA"
-                        className="font-display text-3xl font-bold tracking-tight md:text-4xl"
-                      />
-                    ) : (
-                      <h3 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
-                        {spec.title}
-                      </h3>
-                    )}
+                    <h3 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
+                      {spec.title}
+                    </h3>
                     
                     <p className="mt-4 text-sm leading-relaxed text-muted flex-grow">
                       {spec.desc}
